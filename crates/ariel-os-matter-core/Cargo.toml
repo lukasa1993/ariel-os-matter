@@ -1,0 +1,66 @@
+[package]
+name = "ariel-os-matter-core"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Chip-independent no_std Matter subsystem API for Ariel OS"
+
+[features]
+default = [
+    "commissioning",
+    "events",
+    "factory-reset",
+    "persistent-subscriptions",
+    "storage",
+]
+std = []
+commissioning = []
+events = []
+factory-reset = []
+persistent-subscriptions = []
+storage = []
+service-ble = []
+service-bridge = []
+service-ethernet = []
+service-ota-provider = []
+service-ota-requestor = []
+service-thread = []
+service-wifi = []
+
+device-foundation = []
+device-lighting = []
+device-switches = []
+device-sensors = []
+device-locks-closures = []
+device-hvac = []
+device-water = []
+device-energy = []
+device-appliances = []
+device-media = []
+device-bridges = ["service-bridge"]
+device-thread-infrastructure = ["service-thread"]
+device-ota = ["service-ota-provider", "service-ota-requestor"]
+all-device-types = [
+    "device-foundation",
+    "device-lighting",
+    "device-switches",
+    "device-sensors",
+    "device-locks-closures",
+    "device-hvac",
+    "device-water",
+    "device-energy",
+    "device-appliances",
+    "device-media",
+    "device-bridges",
+    "device-thread-infrastructure",
+    "device-ota",
+]
+
+[dependencies]
+bitflags.workspace = true
+heapless.workspace = true
+
+[lints]
+workspace = true

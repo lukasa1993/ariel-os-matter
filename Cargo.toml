@@ -1,0 +1,41 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/ariel-os-matter-core",
+    "crates/ariel-os-matter-rs",
+    "crates/ariel-os-matter-ariel",
+    "platforms/esp32-s3",
+    "tools/support-matrix",
+]
+default-members = [
+    "crates/ariel-os-matter-core",
+    "crates/ariel-os-matter-rs",
+    "tools/support-matrix",
+]
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.87"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/lukasa1993/ariel-os-matter"
+
+[workspace.dependencies]
+bitflags = { version = "2.9", default-features = false }
+heapless = { version = "0.9.1", default-features = false }
+rs-matter = { git = "https://github.com/project-chip/rs-matter", rev = "ce693b88c5827428ad30990308470738d892b570", default-features = false }
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+serde_json = "1.0"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+unexpected_cfgs = { level = "warn", check-cfg = ["cfg(context, values(\"ariel-os\", \"esp\"))"] }
+
+[workspace.lints.clippy]
+all = "warn"
+pedantic = "warn"
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+todo = "deny"
+unimplemented = "deny"
