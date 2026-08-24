@@ -1,0 +1,34 @@
+[package]
+name = "ariel-os-matter-ariel"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Ariel OS platform adapters for the portable Matter subsystem"
+
+[features]
+default = []
+ariel = ["dep:ariel-os"]
+defmt = ["ariel-os-matter-core/defmt"]
+
+[dependencies]
+ariel-os-matter-core = { path = "../ariel-os-matter-core" }
+ariel-os-matter-rs = { path = "../ariel-os-matter-rs" }
+heapless.workspace = true
+ariel-os = { git = "https://github.com/ariel-os/ariel-os", rev = "90f41cfe52c86c96b09b276b44e1a40e14733058", default-features = false, features = [
+    "ble",
+    "ble-peripheral",
+    "csprng",
+    "ipv6",
+    "mdns",
+    "multicast",
+    "net",
+    "random",
+    "storage",
+    "time",
+    "udp",
+], optional = true }
+
+[lints]
+workspace = true
