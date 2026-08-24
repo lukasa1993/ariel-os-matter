@@ -1,0 +1,25 @@
+[package]
+name = "ariel-os-matter-rs"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Ariel OS adapter boundary for rs-matter"
+
+[features]
+default = ["rustcrypto"]
+rustcrypto = ["rs-matter/rustcrypto"]
+groups = ["rs-matter/groups"]
+persistent-subscriptions = ["rs-matter/persistent-subscriptions"]
+case-resumption = ["rs-matter/case-resumption"]
+defmt = ["rs-matter/defmt"]
+log = ["rs-matter/log"]
+
+[dependencies]
+ariel-os-matter-core = { path = "../ariel-os-matter-core" }
+heapless.workspace = true
+rs-matter.workspace = true
+
+[lints]
+workspace = true
