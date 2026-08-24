@@ -1,0 +1,42 @@
+[package]
+name = "ariel-os-matter-esp32-s3"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "ESP32-S3 reference adapters for Ariel OS Matter"
+
+[features]
+default = []
+esp32s3 = [
+    "dep:esp-hal",
+    "dep:esp-radio",
+    "dep:esp-storage",
+    "dep:trouble-host",
+]
+defmt = [
+    "dep:defmt",
+    "esp-hal?/defmt",
+    "esp-radio?/defmt",
+]
+
+[dependencies]
+ariel-os-matter-core = { path = "../../crates/ariel-os-matter-core", features = [
+    "all-device-types",
+    "service-ble",
+    "service-bridge",
+    "service-ota-provider",
+    "service-ota-requestor",
+    "service-wifi",
+] }
+ariel-os-matter-ariel = { path = "../../crates/ariel-os-matter-ariel" }
+heapless.workspace = true
+defmt = { version = "1.0", optional = true }
+esp-hal = { version = "~1.0.0", default-features = false, features = ["esp32s3", "unstable"], optional = true }
+esp-radio = { version = "0.17.0", default-features = false, features = ["esp32s3", "wifi", "ble"], optional = true }
+esp-storage = { version = "0.8.0", default-features = false, features = ["esp32s3"], optional = true }
+trouble-host = { version = "0.5.0", default-features = false, optional = true }
+
+[lints]
+workspace = true
