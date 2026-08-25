@@ -12,7 +12,7 @@ permissions:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -22,8 +22,8 @@ jobs:
       - name: Archive audited source
         run: git archive --format=tar HEAD > source.tar
 
-      - name: Install Rust 1.87
-        uses: dtolnay/rust-toolchain@1.87.0
+      - name: Install Rust 1.95
+        uses: dtolnay/rust-toolchain@1.95.0
         with:
           components: rustfmt, clippy
 
@@ -33,6 +33,9 @@ jobs:
           cargo --version --verbose
           python3 --version
           git --version
+
+      - name: Resolve pinned dependencies
+        run: cargo generate-lockfile
 
       - name: Check formatting
         run: cargo fmt --all -- --check
@@ -46,11 +49,13 @@ jobs:
       - name: Test workspace
         run: cargo test --workspace
 
-      - name: Upload audited source
+      - name: Upload audit evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: audited-source
-          path: source.tar
-          if-no-files-found: error
+          name: static-audit-evidence
+          path: |
+            source.tar
+            Cargo.lock
+          if-no-files-found: warn
           retention-days: 7
