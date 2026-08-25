@@ -1,0 +1,39 @@
+name: apply-format
+
+on:
+  push:
+    branches:
+      - fix/static-audit-20260825
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: ${{ !contains(github.event.head_commit.message, '[rustfmt]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          ref: fix/static-audit-20260825
+
+      - name: Install Rust 1.87
+        uses: dtolnay/rust-toolchain@1.87.0
+        with:
+          components: rustfmt
+
+      - name: Format source
+        run: cargo fmt --all
+
+      - name: Commit format changes
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -- '*.rs'
+          git commit -m 'style: apply rustfmt [rustfmt]'
+          git push origin HEAD:fix/static-audit-20260825
