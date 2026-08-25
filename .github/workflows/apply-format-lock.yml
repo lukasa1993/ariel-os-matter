@@ -1,0 +1,43 @@
+name: apply-format-lock
+
+on:
+  push:
+    branches:
+      - fix/static-audit-20260825
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          ref: fix/static-audit-20260825
+          fetch-depth: 0
+
+      - name: Install Rust 1.95
+        uses: dtolnay/rust-toolchain@1.95.0
+        with:
+          components: rustfmt
+
+      - name: Generate lock file and format source
+        run: |
+          cargo generate-lockfile
+          cargo fmt --all
+
+      - name: Commit deterministic build files
+        run: |
+          if git diff --quiet -- Cargo.lock '*.rs'; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Cargo.lock
+          git add -- '*.rs'
+          git commit -m "build: commit lock file and rustfmt output"
+          git push origin HEAD:fix/static-audit-20260825
