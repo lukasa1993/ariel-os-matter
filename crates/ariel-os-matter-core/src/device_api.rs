@@ -815,7 +815,10 @@ mod tests {
         let thermostat = ThermostatState::new(2_000, 1_900, 2_300, 200);
         assert!(thermostat.is_ok());
         if let Ok(mut thermostat) = thermostat {
-            assert_eq!(thermostat.set_setpoints(2_100, 2_200), Err(Error::InvalidArgument));
+            assert_eq!(
+                thermostat.set_setpoints(2_100, 2_200),
+                Err(Error::InvalidArgument)
+            );
             assert_eq!(thermostat.set_setpoints(2_000, 2_300), Ok(()));
         }
     }
