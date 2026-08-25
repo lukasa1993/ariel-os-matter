@@ -22,42 +22,67 @@ events = []
 factory-reset = []
 persistent-subscriptions = []
 storage = []
-service-ble = []
-service-bridge = []
-service-ethernet = []
-service-ota-provider = []
-service-ota-requestor = []
-service-thread = []
-service-wifi = []
+groups = []
 
-device-foundation = []
-device-lighting = []
-device-switches = []
-device-sensors = []
-device-locks-closures = []
-device-hvac = []
-device-water = []
-device-energy = []
-device-appliances = []
-device-media = []
-device-bridges = ["service-bridge"]
-device-thread-infrastructure = ["service-thread"]
-device-ota = ["service-ota-provider", "service-ota-requestor"]
+wifi = []
+ethernet = []
+thread = []
+ble = []
+ota-requestor = []
+ota-provider = []
+bridge = []
+
+devices-lighting = []
+devices-switches = []
+devices-locks = []
+devices-sensors = []
+devices-closures = []
+devices-hvac = []
+devices-water = []
+devices-energy = []
+devices-appliances = []
+devices-media = []
+devices-infrastructure = []
+esp32-s3 = []
+
 all-device-types = [
-    "device-foundation",
-    "device-lighting",
-    "device-switches",
-    "device-sensors",
-    "device-locks-closures",
-    "device-hvac",
-    "device-water",
-    "device-energy",
-    "device-appliances",
-    "device-media",
-    "device-bridges",
-    "device-thread-infrastructure",
-    "device-ota",
+    "devices-lighting",
+    "devices-switches",
+    "devices-locks",
+    "devices-sensors",
+    "devices-closures",
+    "devices-hvac",
+    "devices-water",
+    "devices-energy",
+    "devices-appliances",
+    "devices-media",
+    "devices-infrastructure",
+    "bridge",
+    "ota-requestor",
+    "ota-provider",
 ]
+
+# Compatibility aliases for the first implementation branch.
+service-ble = ["ble"]
+service-bridge = ["bridge"]
+service-ethernet = ["ethernet"]
+service-ota-provider = ["ota-provider"]
+service-ota-requestor = ["ota-requestor"]
+service-thread = ["thread"]
+service-wifi = ["wifi"]
+device-foundation = ["devices-infrastructure"]
+device-lighting = ["devices-lighting"]
+device-switches = ["devices-switches"]
+device-sensors = ["devices-sensors"]
+device-locks-closures = ["devices-locks", "devices-closures"]
+device-hvac = ["devices-hvac"]
+device-water = ["devices-water"]
+device-energy = ["devices-energy"]
+device-appliances = ["devices-appliances"]
+device-media = ["devices-media"]
+device-bridges = ["bridge"]
+device-thread-infrastructure = ["devices-infrastructure"]
+device-ota = ["ota-requestor", "ota-provider"]
 
 [dependencies]
 bitflags.workspace = true
