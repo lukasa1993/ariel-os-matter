@@ -16,6 +16,7 @@ default = [
     "storage",
 ]
 std = []
+defmt = []
 commissioning = []
 events = []
 factory-reset = []
