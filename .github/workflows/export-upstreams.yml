@@ -1,0 +1,66 @@
+name: export-upstreams
+
+on:
+  push:
+    branches:
+      - fix/static-audit-20260825
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    if: ${{ !contains(github.event.head_commit.message, '[upstream-export]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out this repository
+        uses: actions/checkout@v4
+        with:
+          path: project
+
+      - name: Check out ConnectedHomeIP Matter 1.6 model
+        uses: actions/checkout@v4
+        with:
+          repository: project-chip/connectedhomeip
+          ref: 9fe1837d9454cd562f7fc0e76fe2ad490efe8741
+          path: upstream/connectedhomeip
+          fetch-depth: 1
+          sparse-checkout: |
+            data_model/1.6
+            LICENSE
+
+      - name: Check out rs-matter 0.3.0 release commit
+        uses: actions/checkout@v4
+        with:
+          repository: project-chip/rs-matter
+          ref: 63a544f0286e0c8d2a8c2ed9a4cf05f68d5c9876
+          path: upstream/rs-matter
+          fetch-depth: 1
+
+      - name: Record source hashes
+        run: |
+          find upstream/connectedhomeip/data_model/1.6 -type f -print0 \
+            | sort -z \
+            | xargs -0 sha256sum > connectedhomeip-matter-1.6.sha256
+          find upstream/rs-matter -type f -not -path '*/.git/*' -print0 \
+            | sort -z \
+            | xargs -0 sha256sum > rs-matter-0.3.0.sha256
+
+      - name: Export sources
+        run: |
+          tar -C upstream/connectedhomeip -czf connectedhomeip-matter-1.6.tar.gz data_model/1.6 LICENSE
+          tar -C upstream/rs-matter --exclude=.git -czf rs-matter-0.3.0.tar.gz .
+
+      - name: Upload official sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-upstreams
+          path: |
+            connectedhomeip-matter-1.6.tar.gz
+            connectedhomeip-matter-1.6.sha256
+            rs-matter-0.3.0.tar.gz
+            rs-matter-0.3.0.sha256
+          if-no-files-found: error
+          retention-days: 7
