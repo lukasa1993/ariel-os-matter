@@ -113,6 +113,9 @@ where
     }
 }
 
-fn map_phase(value: Result<()>, phase: FactoryResetPhase) -> core::result::Result<(), FactoryResetFailure> {
+fn map_phase(
+    value: Result<()>,
+    phase: FactoryResetPhase,
+) -> core::result::Result<(), FactoryResetFailure> {
     value.map_err(|error| FactoryResetFailure { phase, error })
 }

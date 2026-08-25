@@ -20,7 +20,9 @@ pub struct FabricIndex(NonZeroU8);
 impl FabricIndex {
     /// Create a valid local fabric index.
     pub fn new(value: u8) -> Result<Self> {
-        NonZeroU8::new(value).map(Self).ok_or(Error::InvalidArgument)
+        NonZeroU8::new(value)
+            .map(Self)
+            .ok_or(Error::InvalidArgument)
     }
 
     /// Return the wire value.

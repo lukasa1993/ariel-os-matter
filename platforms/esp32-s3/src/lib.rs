@@ -11,7 +11,7 @@
 use ariel_os_matter_core::platform::{BleAddress, BleCommissioning, BleGattEvent};
 use ariel_os_matter_core::storage::{StorageKey, SyncSecureStore};
 use ariel_os_matter_core::wifi::{
-    WifiCredentials, WifiDriver, WifiLinkState, WifiScanResult, MAX_SCAN_RESULTS,
+    MAX_SCAN_RESULTS, WifiCredentials, WifiDriver, WifiLinkState, WifiScanResult,
 };
 use ariel_os_matter_core::{Error, Result};
 use heapless::Vec;

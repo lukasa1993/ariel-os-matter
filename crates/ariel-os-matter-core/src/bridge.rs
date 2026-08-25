@@ -41,9 +41,7 @@ impl BridgedDevice {
             return Err(Error::InvalidArgument);
         }
         let mut stored_id = String::new();
-        stored_id
-            .push_str(unique_id)
-            .map_err(|_| Error::Capacity)?;
+        stored_id.push_str(unique_id).map_err(|_| Error::Capacity)?;
         let mut stored_label = String::new();
         stored_label
             .push_str(node_label)
@@ -97,7 +95,9 @@ impl<const N: usize> BridgeTable<N> {
     /// Find a bridged endpoint.
     #[must_use]
     pub fn get(&self, endpoint: EndpointId) -> Option<&BridgedDevice> {
-        self.devices.iter().find(|device| device.endpoint == endpoint)
+        self.devices
+            .iter()
+            .find(|device| device.endpoint == endpoint)
     }
 
     /// Find a bridged endpoint by stable identifier.
@@ -217,9 +217,18 @@ mod tests {
         if let Ok(value) = device(2, "remote-2") {
             assert_eq!(table.add(value), Ok(()));
         }
-        assert_eq!(table.keep_active(EndpointId(2), 1_000, 500, 1_000), Ok(1_500));
-        assert_eq!(table.keep_active(EndpointId(2), 1_000, 2_000, 1_000), Err(Error::InvalidArgument));
+        assert_eq!(
+            table.keep_active(EndpointId(2), 1_000, 500, 1_000),
+            Ok(1_500)
+        );
+        assert_eq!(
+            table.keep_active(EndpointId(2), 1_000, 2_000, 1_000),
+            Err(Error::InvalidArgument)
+        );
         assert_eq!(table.set_reachable(EndpointId(2), false), Ok(1));
-        assert_eq!(table.keep_active(EndpointId(2), 2_000, 500, 1_000), Err(Error::Network));
+        assert_eq!(
+            table.keep_active(EndpointId(2), 2_000, 500, 1_000),
+            Err(Error::Network)
+        );
     }
 }

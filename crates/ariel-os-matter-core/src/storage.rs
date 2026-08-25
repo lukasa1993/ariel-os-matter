@@ -108,9 +108,15 @@ pub trait SecureStore {
     /// Create a non-exportable key.
     async fn generate_key(&mut self, purpose: KeyPurpose) -> Result<KeyHandle>;
     /// Sign a message with a non-exportable key.
-    async fn sign(&mut self, key: KeyHandle, message: &[u8], signature: &mut [u8]) -> Result<usize>;
+    async fn sign(&mut self, key: KeyHandle, message: &[u8], signature: &mut [u8])
+    -> Result<usize>;
     /// Perform ECDH with a non-exportable key.
-    async fn ecdh(&mut self, key: KeyHandle, peer_public: &[u8], shared: &mut [u8]) -> Result<usize>;
+    async fn ecdh(
+        &mut self,
+        key: KeyHandle,
+        peer_public: &[u8],
+        shared: &mut [u8],
+    ) -> Result<usize>;
     /// Destroy a non-exportable key.
     async fn destroy_key(&mut self, key: KeyHandle) -> Result<()>;
     /// Flush all preceding operations to durable media.

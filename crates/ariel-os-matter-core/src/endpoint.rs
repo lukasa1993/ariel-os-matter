@@ -270,9 +270,17 @@ mod tests {
         );
         assert!(root.is_ok());
         assert!(lamp.is_ok());
-        assert_eq!(registry.add_device_type::<BridgedNode>(EndpointId(1)), Ok(()));
+        assert_eq!(
+            registry.add_device_type::<BridgedNode>(EndpointId(1)),
+            Ok(())
+        );
         assert_eq!(registry.len(), 2);
-        assert_eq!(registry.get(EndpointId(1)).map(|value| value.device_types.len()), Some(2));
+        assert_eq!(
+            registry
+                .get(EndpointId(1))
+                .map(|value| value.device_types.len()),
+            Some(2)
+        );
     }
 
     #[test]

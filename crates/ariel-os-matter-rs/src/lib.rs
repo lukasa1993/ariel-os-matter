@@ -10,9 +10,7 @@
 use core::ops::RangeInclusive;
 
 use ariel_os_matter_core::devices::{DeviceTypeDescriptor, DeviceTypeMarker};
-use ariel_os_matter_core::storage::{
-    StorageDomain, StorageKey, SyncBlobStore, SyncSecureStore,
-};
+use ariel_os_matter_core::storage::{StorageDomain, StorageKey, SyncBlobStore, SyncSecureStore};
 use ariel_os_matter_core::{Error, Result};
 use heapless::Vec;
 

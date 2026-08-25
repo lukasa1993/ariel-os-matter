@@ -140,7 +140,9 @@ impl ThreadDataset {
             return Err(Error::InvalidArgument);
         }
         let mut stored = Vec::new();
-        stored.extend_from_slice(bytes).map_err(|_| Error::Capacity)?;
+        stored
+            .extend_from_slice(bytes)
+            .map_err(|_| Error::Capacity)?;
         Ok(Self { bytes: stored })
     }
 

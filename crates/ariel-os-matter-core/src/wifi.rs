@@ -58,7 +58,9 @@ impl WifiCredentials {
 
     /// Create credentials with a WPA passphrase.
     pub fn personal(ssid: &str, security: WifiSecurity, passphrase: &str) -> Result<Self> {
-        if matches!(security, WifiSecurity::Open) || !(8..=MAX_PASSPHRASE_LEN).contains(&passphrase.len()) {
+        if matches!(security, WifiSecurity::Open)
+            || !(8..=MAX_PASSPHRASE_LEN).contains(&passphrase.len())
+        {
             return Err(Error::InvalidArgument);
         }
 
@@ -191,11 +193,7 @@ where
 
     /// Connect with the committed credentials.
     pub async fn connect(&mut self) -> Result<()> {
-        let credentials = self
-            .store
-            .load_committed()
-            .await?
-            .ok_or(Error::NotFound)?;
+        let credentials = self.store.load_committed().await?.ok_or(Error::NotFound)?;
         self.driver.connect(&credentials).await
     }
 

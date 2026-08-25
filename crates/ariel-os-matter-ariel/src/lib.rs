@@ -8,9 +8,7 @@
 #![forbid(unsafe_code)]
 #![allow(async_fn_in_trait)]
 
-use ariel_os_matter_core::storage::{
-    StorageDomain, StorageKey, SyncBlobStore, SyncSecureStore,
-};
+use ariel_os_matter_core::storage::{StorageDomain, StorageKey, SyncBlobStore, SyncSecureStore};
 use ariel_os_matter_core::{Error, Result};
 use heapless::{Vec, Vec as ByteVec};
 
@@ -163,9 +161,7 @@ impl<const N: usize> SyncBlobStore for ArielKvCache<N> {
             return Ok(());
         }
         let mut value = ByteVec::new();
-        value
-            .extend_from_slice(data)
-            .map_err(|_| Error::Capacity)?;
+        value.extend_from_slice(data).map_err(|_| Error::Capacity)?;
         self.entries
             .push(CacheEntry {
                 key,

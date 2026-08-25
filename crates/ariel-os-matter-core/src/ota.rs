@@ -196,7 +196,8 @@ where
         }
         self.slot.write(offset, data).await?;
         if let OtaRequestorState::Downloading {
-            next_offset: stored, ..
+            next_offset: stored,
+            ..
         } = &mut self.state
         {
             *stored = next_offset;
@@ -302,7 +303,12 @@ pub trait OtaProviderBackend {
         current_version: u32,
     ) -> Result<OtaQueryResult>;
     /// Read one image block at an exact offset.
-    async fn read_block(&mut self, image: &OtaImage, offset: u64, output: &mut [u8]) -> Result<usize>;
+    async fn read_block(
+        &mut self,
+        image: &OtaImage,
+        offset: u64,
+        output: &mut [u8],
+    ) -> Result<usize>;
 }
 
 /// Validating OTA Provider facade.
@@ -345,12 +351,17 @@ where
         offset: u64,
         output: &mut [u8],
     ) -> Result<usize> {
-        if output.is_empty() || output.len() > self.maximum_block_size || offset >= image.image_size {
+        if output.is_empty() || output.len() > self.maximum_block_size || offset >= image.image_size
+        {
             return Err(Error::InvalidArgument);
         }
         let remaining = image.image_size - offset;
-        let allowed = usize::try_from(remaining.min(output.len() as u64)).map_err(|_| Error::Capacity)?;
-        let written = self.backend.read_block(image, offset, &mut output[..allowed]).await?;
+        let allowed =
+            usize::try_from(remaining.min(output.len() as u64)).map_err(|_| Error::Capacity)?;
+        let written = self
+            .backend
+            .read_block(image, offset, &mut output[..allowed])
+            .await?;
         if written == 0 || written > allowed {
             return Err(Error::InvalidState);
         }
@@ -374,8 +385,14 @@ mod tests {
 
     #[test]
     fn metadata_rejects_empty_or_zero_values() {
-        assert_eq!(OtaImage::new(0, 2, 3, "v", 1, [0; 32]), Err(Error::InvalidArgument));
-        assert_eq!(OtaImage::new(1, 2, 3, "", 1, [0; 32]), Err(Error::InvalidArgument));
+        assert_eq!(
+            OtaImage::new(0, 2, 3, "v", 1, [0; 32]),
+            Err(Error::InvalidArgument)
+        );
+        assert_eq!(
+            OtaImage::new(1, 2, 3, "", 1, [0; 32]),
+            Err(Error::InvalidArgument)
+        );
         assert!(image(3, 10).is_ok());
     }
 }

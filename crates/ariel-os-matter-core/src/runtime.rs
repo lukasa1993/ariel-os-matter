@@ -59,7 +59,9 @@ impl CommissioningManager {
             return Err(Error::InvalidState);
         }
         self.state = CommissioningState::WindowOpen {
-            expires_at_ms: now_ms.checked_add(timeout_ms).ok_or(Error::InvalidArgument)?,
+            expires_at_ms: now_ms
+                .checked_add(timeout_ms)
+                .ok_or(Error::InvalidArgument)?,
             enhanced,
         };
         Ok(())
@@ -76,7 +78,9 @@ impl CommissioningManager {
             return Err(Error::InvalidState);
         }
         self.state = CommissioningState::FailSafeArmed {
-            expires_at_ms: now_ms.checked_add(timeout_ms).ok_or(Error::InvalidArgument)?,
+            expires_at_ms: now_ms
+                .checked_add(timeout_ms)
+                .ok_or(Error::InvalidArgument)?,
             fabric,
         };
         Ok(())
@@ -94,7 +98,10 @@ impl CommissioningManager {
 
     /// Remove a fabric and update the commissioning state.
     pub fn fabric_removed(&mut self) -> Result<()> {
-        self.fabric_count = self.fabric_count.checked_sub(1).ok_or(Error::InvalidState)?;
+        self.fabric_count = self
+            .fabric_count
+            .checked_sub(1)
+            .ok_or(Error::InvalidState)?;
         self.state = if self.fabric_count == 0 {
             CommissioningState::Uncommissioned
         } else {
@@ -117,9 +124,7 @@ impl CommissioningManager {
                 };
                 false
             }
-            CommissioningState::FailSafeArmed { expires_at_ms, .. }
-                if now_ms >= expires_at_ms =>
-            {
+            CommissioningState::FailSafeArmed { expires_at_ms, .. } if now_ms >= expires_at_ms => {
                 self.state = if self.fabric_count == 0 {
                     CommissioningState::Uncommissioned
                 } else {
@@ -223,7 +228,9 @@ impl<const N: usize> EventLog<N> {
 
     /// Iterate over events from a given event number.
     pub fn from(&self, number: u64) -> impl Iterator<Item = &EventRecord> {
-        self.records.iter().filter(move |record| record.number >= number)
+        self.records
+            .iter()
+            .filter(move |record| record.number >= number)
     }
 
     /// Return the next number that must be persisted as the event epoch.
@@ -362,7 +369,13 @@ mod tests {
         assert_eq!(events.emit(1, 1, 6, 0, EventPriority::Info, b"a"), Ok(40));
         assert_eq!(events.emit(2, 1, 6, 0, EventPriority::Info, b"b"), Ok(41));
         assert_eq!(events.emit(3, 1, 6, 0, EventPriority::Info, b"c"), Ok(42));
-        assert_eq!(events.from(0).map(|event| event.number).collect::<std::vec::Vec<_>>(), [41, 42]);
+        assert_eq!(
+            events
+                .from(0)
+                .map(|event| event.number)
+                .collect::<std::vec::Vec<_>>(),
+            [41, 42]
+        );
     }
 
     #[test]

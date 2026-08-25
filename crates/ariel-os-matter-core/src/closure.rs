@@ -214,7 +214,8 @@ impl ClosureController {
         if !self.state.errors.is_empty() {
             return Err(Error::InvalidState);
         }
-        if self.state.main_state != MainState::Stopped && self.state.main_state != MainState::Moving {
+        if self.state.main_state != MainState::Stopped && self.state.main_state != MainState::Moving
+        {
             return Err(Error::InvalidState);
         }
         if self.state.obstruction && target > self.state.current_position {
@@ -395,8 +396,16 @@ where
         planned.command(command)?;
 
         match planned.snapshot().motion {
-            Motion::Opening => self.actuator.open_to(planned.snapshot().target_position).await?,
-            Motion::Closing => self.actuator.close_to(planned.snapshot().target_position).await?,
+            Motion::Opening => {
+                self.actuator
+                    .open_to(planned.snapshot().target_position)
+                    .await?
+            }
+            Motion::Closing => {
+                self.actuator
+                    .close_to(planned.snapshot().target_position)
+                    .await?
+            }
             Motion::Stopped => self.actuator.stop().await?,
         }
 
@@ -498,8 +507,16 @@ mod tests {
         assert_eq!(closure.set_obstruction(true), Ok(()));
         assert_eq!(closure.snapshot().motion, Motion::Stopped);
         assert_eq!(closure.snapshot().main_state, MainState::Error);
-        assert!(closure.snapshot().errors.contains(&ClosureError::BlockedBySensor));
-        assert_eq!(closure.command(ClosureCommand::Close), Err(Error::InvalidState));
+        assert!(
+            closure
+                .snapshot()
+                .errors
+                .contains(&ClosureError::BlockedBySensor)
+        );
+        assert_eq!(
+            closure.command(ClosureCommand::Close),
+            Err(Error::InvalidState)
+        );
 
         assert_eq!(closure.set_obstruction(false), Ok(()));
         assert_eq!(closure.command(ClosureCommand::Open), Ok(()));
@@ -513,7 +530,10 @@ mod tests {
         assert_eq!(closure.set_fault(ClosureError::DriveFault), Ok(()));
         assert_eq!(closure.snapshot().motion, Motion::Stopped);
         assert_eq!(closure.snapshot().main_state, MainState::Error);
-        assert_eq!(closure.command(ClosureCommand::Open), Err(Error::InvalidState));
+        assert_eq!(
+            closure.command(ClosureCommand::Open),
+            Err(Error::InvalidState)
+        );
         closure.clear_fault(ClosureError::DriveFault);
         assert_eq!(closure.command(ClosureCommand::Open), Ok(()));
     }
