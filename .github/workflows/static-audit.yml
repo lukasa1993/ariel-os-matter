@@ -1,0 +1,56 @@
+name: static-audit
+
+on:
+  push:
+    branches:
+      - fix/static-audit-20260825
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Archive audited source
+        run: git archive --format=tar HEAD > source.tar
+
+      - name: Install Rust 1.87
+        uses: dtolnay/rust-toolchain@1.87.0
+        with:
+          components: rustfmt, clippy
+
+      - name: Record tool versions
+        run: |
+          rustc --version --verbose
+          cargo --version --verbose
+          python3 --version
+          git --version
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Check portable core without defaults
+        run: cargo check -p ariel-os-matter-core --no-default-features
+
+      - name: Check workspace targets
+        run: cargo check --workspace --all-targets
+
+      - name: Test workspace
+        run: cargo test --workspace
+
+      - name: Upload audited source
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audited-source
+          path: source.tar
+          if-no-files-found: error
+          retention-days: 7
