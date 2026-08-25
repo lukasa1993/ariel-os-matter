@@ -1,5 +1,5 @@
 [workspace]
-resolver = "2"
+resolver = "3"
 members = [
     "crates/ariel-os-matter-core",
     "crates/ariel-os-matter-rs",
@@ -15,14 +15,14 @@ default-members = [
 
 [workspace.package]
 edition = "2024"
-rust-version = "1.87"
+rust-version = "1.95"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/lukasa1993/ariel-os-matter"
 
 [workspace.dependencies]
 bitflags = { version = "2.9", default-features = false }
 heapless = { version = "0.9.1", default-features = false }
-rs-matter = { git = "https://github.com/project-chip/rs-matter", rev = "ce693b88c5827428ad30990308470738d892b570", default-features = false }
+rs-matter = { git = "https://github.com/project-chip/rs-matter", rev = "63a544f0286e0c8d2a8c2ed9a4cf05f68d5c9876", default-features = false }
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 serde_json = "1.0"
 
@@ -39,3 +39,27 @@ expect_used = "deny"
 panic = "deny"
 todo = "deny"
 unimplemented = "deny"
+
+[patch.crates-io]
+# Ariel OS compatibility patches from ariel-os-cargo.toml at
+# 90f41cfe52c86c96b09b276b44e1a40e14733058. Cargo does not inherit
+# dependency-local patches, so the top-level workspace must repeat them.
+cyw43 = { git = "https://github.com/ariel-os/embassy", rev = "603583d94cb7ba14b3a6bbb84c8c5fea8bffea0d" }
+cyw43-pio = { git = "https://github.com/ariel-os/embassy", rev = "603583d94cb7ba14b3a6bbb84c8c5fea8bffea0d" }
+embassy-hal-internal = { git = "https://github.com/ariel-os/embassy", rev = "0feffeb3c90748112a64c6570a39e1251311accb" }
+embassy-nrf = { git = "https://github.com/ariel-os/embassy", rev = "3940a79a29ae578a35625cae949bea473abf21d1" }
+embassy-net = { git = "https://github.com/ariel-os/embassy", rev = "37683fe299f12028e5a77af9f742f496da08afcd" }
+embassy-rp = { git = "https://github.com/ariel-os/embassy", rev = "0314802282e112a47b4ccb303c0e7f09cf33df53" }
+embassy-stm32 = { git = "https://github.com/ariel-os/embassy", rev = "1b75c3d6e61a99a312e2d12f039fa6e76e9c3a9c" }
+embassy-time = { git = "https://github.com/ariel-os/embassy", rev = "3c1b5fbf28237ea7144ae970c3aec11c38023c3f" }
+embassy-usb-synopsys-otg = { git = "https://github.com/ariel-os/embassy", rev = "478df29985c8e0d0ff2e915440c8ca15e36f4403" }
+esp-alloc = { git = "https://github.com/ariel-os/esp-hal", rev = "531c629afdd80ea464682ce7f4db8baed97967a6" }
+esp-bootloader-esp-idf = { git = "https://github.com/ariel-os/esp-hal", rev = "531c629afdd80ea464682ce7f4db8baed97967a6" }
+esp-hal = { git = "https://github.com/ariel-os/esp-hal", rev = "531c629afdd80ea464682ce7f4db8baed97967a6" }
+esp-metadata-generated = { git = "https://github.com/ariel-os/esp-hal", rev = "531c629afdd80ea464682ce7f4db8baed97967a6" }
+esp-println = { git = "https://github.com/ariel-os/esp-hal", rev = "531c629afdd80ea464682ce7f4db8baed97967a6" }
+esp-radio = { git = "https://github.com/ariel-os/esp-hal", rev = "531c629afdd80ea464682ce7f4db8baed97967a6" }
+esp-radio-rtos-driver = { git = "https://github.com/ariel-os/esp-hal", rev = "531c629afdd80ea464682ce7f4db8baed97967a6" }
+esp-rom-sys = { git = "https://github.com/ariel-os/esp-hal", rev = "531c629afdd80ea464682ce7f4db8baed97967a6" }
+esp-sync = { git = "https://github.com/ariel-os/esp-hal", rev = "531c629afdd80ea464682ce7f4db8baed97967a6" }
+xtensa-lx-rt = { git = "https://github.com/ariel-os/esp-hal", rev = "531c629afdd80ea464682ce7f4db8baed97967a6" }
