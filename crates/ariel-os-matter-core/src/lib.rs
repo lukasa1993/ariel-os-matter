@@ -14,6 +14,7 @@ extern crate std;
 pub mod access;
 pub mod bridge;
 pub mod closure;
+pub mod device_api;
 pub mod devices;
 pub mod endpoint;
 pub mod error;
