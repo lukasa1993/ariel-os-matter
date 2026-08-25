@@ -262,15 +262,18 @@ mod tests {
 
     #[test]
     fn credentials_reject_invalid_secret_shapes() {
-        assert_eq!(WifiCredentials::open(""), Err(Error::InvalidArgument));
-        assert_eq!(
+        assert!(matches!(
+            WifiCredentials::open(""),
+            Err(Error::InvalidArgument)
+        ));
+        assert!(matches!(
             WifiCredentials::personal("net", WifiSecurity::Open, "12345678"),
             Err(Error::InvalidArgument)
-        );
-        assert_eq!(
+        ));
+        assert!(matches!(
             WifiCredentials::personal("net", WifiSecurity::Wpa3Personal, "short"),
             Err(Error::InvalidArgument)
-        );
+        ));
     }
 
     #[test]
